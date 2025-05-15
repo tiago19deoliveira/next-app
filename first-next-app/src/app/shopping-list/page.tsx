@@ -15,14 +15,31 @@ function ShoppingList() {
     name: "",
     quantity: 1,
   });
+  const [edit, setEdit] = useState<boolean>(false);
 
-  function Adicionar() {
-    let id = 1;
-    if (items.length > 0) {
-      const lastIndex: Item = items[items.length - 1];
-      id = lastIndex.id + 1;
+  function Update(item: Item) {
+    setEdit(true);
+
+    setCurrentItem(item);
+  }
+
+  function Process() {
+    if (!edit) {
+      let id = 1;
+      if (items.length > 0) {
+        const lastIndex: Item = items[items.length - 1];
+        id = lastIndex.id + 1;
+      }
+      items.push({ ...currentItem, id });
+      setCurrentItem({ id: 0, name: "", quantity: 1 });
+    } else {
+      const updatedItems = [...items];
+      const index = items.findIndex((i) => i.id === currentItem.id);
+      updatedItems[index] = { ...currentItem };
+      setItems([...updatedItems]);
+      setCurrentItem({ id: 0, name: "", quantity: 0 });
+      setEdit(false);
     }
-    items.push({ ...currentItem, id });
   }
 
   return (
@@ -45,8 +62,21 @@ function ShoppingList() {
           setCurrentItem({ ...currentItem, quantity: Number(e.target.value) })
         }
       />
-
-      <button onClick={() => Adicionar()}>adicionar</button>
+      <button onClick={() => Process()}>
+        {edit && "salvar"} {!edit && "Adicionar"}
+      </button>
+      <br /> <br />
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            {item.name} - {item.quantity}
+            <button style={{ marginLeft: 10 }} onClick={() => Update(item)}>
+              Editar
+            </button>
+            <button style={{ marginLeft: 10 }}>Excluir</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
