@@ -23,6 +23,11 @@ function ShoppingList() {
     setCurrentItem(item);
   }
 
+  function Remove(id: number) {
+    const updatedItems = items.filter((item) => item.id !== id);
+    setItems(updatedItems);
+  }
+
   function Process() {
     if (!edit) {
       let id = 1;
@@ -73,7 +78,9 @@ function ShoppingList() {
             <button style={{ marginLeft: 10 }} onClick={() => Update(item)}>
               Editar
             </button>
-            <button style={{ marginLeft: 10 }}>Excluir</button>
+            <button style={{ marginLeft: 10 }} onClick={() => Remove(item.id)}>
+              Excluir
+            </button>
           </li>
         ))}
       </ul>
